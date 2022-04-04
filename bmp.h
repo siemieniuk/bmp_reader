@@ -30,4 +30,10 @@ typedef struct tagBITMAPINFOHEADER {
   DWORD biClrImportant;
 } BITMAPINFOHEADER, *LPBITMAPINFOHEADER, *PBITMAPINFOHEADER;
 
+struct rgb {
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+};
+
 #endif // BMP_H_INCLUDED
