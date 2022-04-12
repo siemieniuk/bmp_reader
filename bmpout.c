@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "bmp.h"
 
 void print_bitmap_file_header(struct tagBITMAPFILEHEADER* f) {
