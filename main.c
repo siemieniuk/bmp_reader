@@ -1,29 +1,16 @@
-#include <stdint.h>
+#include <stdio.h>
 
-typedef uint16_t WORD;
-typedef uint32_t DWORD;
-typedef int32_t LONG;
-
-// https://docs.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapfileheader
-typedef struct tagBITMAPFILEHEADER {
-  WORD  bfType;
-  DWORD bfSize;
-  WORD  bfReserved1;
-  WORD  bfReserved2;
-  DWORD bfOffBits;
-} BITMAPFILEHEADER, *LPBITMAPFILEHEADER, *PBITMAPFILEHEADER;
-
-// https://docs.microsoft.com/pl-pl/previous-versions/dd183376(v=vs.85)
-typedef struct tagBITMAPINFOHEADER {
-  DWORD biSize;
-  LONG  biWidth;
-  LONG  biHeight;
-  WORD  biPlanes;
-  WORD  biBitCount;
-  DWORD biCompression;
-  DWORD biSizeImage;
-  LONG  biXPelsPerMeter;
-  LONG  biYPelsPerMeter;
-  DWORD biClrUsed;
-  DWORD biClrImportant;
-} BITMAPINFOHEADER, *LPBITMAPINFOHEADER, *PBITMAPINFOHEADER;
+int main(int argc, char* argv[]) {
+    if (argc == 1 || argc >= 4) {
+        fprintf(stderr, "Invalid script usage\n"
+                        "Correct syntaxes:\n"
+                        "(1) bmpreader <file>\n"
+                        "(2) bmpreader <input_file> <output_file>\n");
+        exit(1);
+    } else if (argc == 2) {
+        // TODO: process with one path
+    } else { //argc == 3
+        // TODO: process with two paths
+    }
+    return 0;
+}
