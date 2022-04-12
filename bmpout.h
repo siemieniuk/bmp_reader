@@ -1,6 +1,6 @@
 #ifndef BMPOUT_H_INCLUDED
 #define BMPOUT_H_INCLUDED
-
+#include "bmp.h"
 /**
  * Prints specific file's header
  * @param f Object to print
