@@ -2,10 +2,15 @@
 #include <stdlib.h>
 #include "bmpall.h"
 
+unsigned compute_bmp_row_size(BMPfile* file);
+void free_bmp_file(BMPfile*);
 BITMAPFILEHEADER* read_bitmap_file_header(FILE*);
 BITMAPINFOHEADER* read_bitmap_info_header(FILE*);
 BMPfile* read_bmp_file(const char* const path);
-void free_bmp_file(BMPfile*);
+
+inline unsigned compute_bmp_row_size(BMPfile* file) {
+    return ((file->info_header->biBitCount)*(file->info_header->biWidth)+31)/32*4;
+}
 
 BMPfile* read_bmp_file(const char* const path) {
     FILE* f = fopen(path, "r");
@@ -16,6 +21,12 @@ BMPfile* read_bmp_file(const char* const path) {
     BMPfile* img = (BMPfile*)malloc(sizeof(BMPfile));
     img->file_header = read_bitmap_file_header(f);
     img->info_header = read_bitmap_info_header(f);
+    img->row_length = compute_bmp_row_size(img);
+
+    img->content = (unsigned char**)calloc(img->info_header->biHeight, sizeof(char**));
+    for (unsigned i=0; i<img->info_header->biHeight; i++) {
+        img->content[i] = (unsigned char*)calloc(img->row_length, sizeof(unsigned char*));
+    }
     fclose(f);
     return img;
 }
@@ -46,8 +57,12 @@ BITMAPINFOHEADER* read_bitmap_info_header(FILE* f) {
     return res;
 }
 
-void free_bmp_file(BMPfile* file) {
-    free(file->file_header);
-    free(file->info_header);
-    free(file);
+void free_bmp_file(BMPfile* img) {
+    for (unsigned i=0; i<img->info_header->biHeight; i++) {
+        free(img->content[i]);
+    }
+    free(img->content);
+    free(img->info_header);
+    free(img->file_header);
+    free(img);
 }

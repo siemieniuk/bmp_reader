@@ -14,7 +14,6 @@ void print_bitmap_file_header(struct tagBITMAPFILEHEADER* f);
 void print_bitmap_info_header(struct tagBITMAPINFOHEADER* f);
 
 unsigned char calculate_gray(const struct rgb obj);
-unsigned get_bmp_row_size(BMPfile* file);
 
 void read_histogram(BMPfile* file);
 

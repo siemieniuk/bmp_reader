@@ -33,6 +33,8 @@ typedef struct tagBITMAPINFOHEADER {
 typedef struct BMPfile {
     BITMAPFILEHEADER* file_header;
     BITMAPINFOHEADER* info_header;
+    unsigned row_length;
+    unsigned char** content;
 } BMPfile;
 
 struct rgb {
