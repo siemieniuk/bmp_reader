@@ -15,7 +15,7 @@ inline unsigned compute_bmp_row_size(BMPfile* file) {
 BMPfile* read_bmp_file(const char* const path) {
     FILE* f = fopen(path, "r");
     if (!f) {
-        fprintf(stderr, "File &s not found!", path);
+        fprintf(stderr, "File %s not found!", path);
         exit(1);
     }
     BMPfile* img = (BMPfile*)malloc(sizeof(BMPfile));
