@@ -34,7 +34,6 @@ BMPfile* read_bmp_file(const char* const path) {
     for (unsigned i=0; i<img->info_header->biHeight; i++) {
         fread(img->content[i], img->row_length, 1, file);
     }
-    printf("\n%d\n", img->content[0][0]);
     fclose(file);
     return img;
 }
