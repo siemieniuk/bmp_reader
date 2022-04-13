@@ -2,58 +2,66 @@
 #include <stdlib.h>
 #include "bmpall.h"
 
-unsigned compute_bmp_row_size(BMPfile* file);
+unsigned compute_bmp_row_size(BMPfile*);
 void free_bmp_file(BMPfile*);
 BITMAPFILEHEADER* read_bitmap_file_header(FILE*);
 BITMAPINFOHEADER* read_bitmap_info_header(FILE*);
-BMPfile* read_bmp_file(const char* const path);
+BMPfile* read_bmp_file(const char* const);
 
 inline unsigned compute_bmp_row_size(BMPfile* file) {
     return ((file->info_header->biBitCount)*(file->info_header->biWidth)+31)/32*4;
 }
 
 BMPfile* read_bmp_file(const char* const path) {
-    FILE* f = fopen(path, "r");
-    if (!f) {
+    FILE* file = fopen(path, "rb");
+    if (!file) {
         fprintf(stderr, "File %s not found!", path);
         exit(1);
     }
+    // creating IMG object
     BMPfile* img = (BMPfile*)malloc(sizeof(BMPfile));
-    img->file_header = read_bitmap_file_header(f);
-    img->info_header = read_bitmap_info_header(f);
+    img->file_header = read_bitmap_file_header(file);
+    img->info_header = read_bitmap_info_header(file);
     img->row_length = compute_bmp_row_size(img);
-
-    img->content = (unsigned char**)calloc(img->info_header->biHeight, sizeof(char**));
+    // creating 2D array
+    img->content = (unsigned char**)calloc(img->info_header->biHeight, sizeof(unsigned char*));
     for (unsigned i=0; i<img->info_header->biHeight; i++) {
-        img->content[i] = (unsigned char*)calloc(img->row_length, sizeof(unsigned char*));
+        img->content[i] = (unsigned char*)calloc(img->row_length, sizeof(unsigned char));
     }
-    fclose(f);
+    // Set the file position indicator in front of main content
+    fseek(file, img->file_header->bfOffBits, SEEK_SET);
+    // Reading each of a GRB pixel
+    for (unsigned i=0; i<img->info_header->biHeight; i++) {
+        fread(img->content[i], img->row_length, 1, file);
+    }
+    printf("\n%d\n", img->content[0][0]);
+    fclose(file);
     return img;
 }
 
-BITMAPFILEHEADER* read_bitmap_file_header(FILE* f) {
+BITMAPFILEHEADER* read_bitmap_file_header(FILE* file) {
     BITMAPFILEHEADER* res = (BITMAPFILEHEADER*)malloc(sizeof(BITMAPFILEHEADER));
-    fread(&res->bfType, sizeof(res->bfType), 1, f);
-    fread(&res->bfSize, sizeof(res->bfSize), 1, f);
-    fread(&res->bfReserved1, sizeof(res->bfReserved1), 1, f);
-    fread(&res->bfReserved2, sizeof(res->bfReserved2), 1, f);
-    fread(&res->bfOffBits, sizeof(res->bfOffBits), 1, f);
+    fread(&res->bfType, sizeof(res->bfType), 1, file);
+    fread(&res->bfSize, sizeof(res->bfSize), 1, file);
+    fread(&res->bfReserved1, sizeof(res->bfReserved1), 1, file);
+    fread(&res->bfReserved2, sizeof(res->bfReserved2), 1, file);
+    fread(&res->bfOffBits, sizeof(res->bfOffBits), 1, file);
     return res;
 }
 
-BITMAPINFOHEADER* read_bitmap_info_header(FILE* f) {
+BITMAPINFOHEADER* read_bitmap_info_header(FILE* file) {
     BITMAPINFOHEADER* res = (BITMAPINFOHEADER*)malloc(sizeof(BITMAPINFOHEADER));
-    fread(&res->biSize, sizeof(res->biSize), 1, f);
-    fread(&res->biWidth, sizeof(res->biWidth), 1, f);
-    fread(&res->biHeight, sizeof(res->biHeight), 1, f);
-    fread(&res->biPlanes, sizeof(res->biPlanes), 1, f);
-    fread(&res->biBitCount, sizeof(res->biBitCount), 1, f);
-    fread(&res->biCompression, sizeof(res->biCompression), 1, f);
-    fread(&res->biSizeImage, sizeof(res->biSizeImage), 1, f);
-    fread(&res->biXPelsPerMeter, sizeof(res->biXPelsPerMeter), 1, f);
-    fread(&res->biYPelsPerMeter, sizeof(res->biYPelsPerMeter), 1, f);
-    fread(&res->biClrUsed, sizeof(res->biClrUsed), 1, f);
-    fread(&res->biClrImportant, sizeof(res->biClrImportant), 1, f);
+    fread(&res->biSize, sizeof(res->biSize), 1, file);
+    fread(&res->biWidth, sizeof(res->biWidth), 1, file);
+    fread(&res->biHeight, sizeof(res->biHeight), 1, file);
+    fread(&res->biPlanes, sizeof(res->biPlanes), 1, file);
+    fread(&res->biBitCount, sizeof(res->biBitCount), 1, file);
+    fread(&res->biCompression, sizeof(res->biCompression), 1, file);
+    fread(&res->biSizeImage, sizeof(res->biSizeImage), 1, file);
+    fread(&res->biXPelsPerMeter, sizeof(res->biXPelsPerMeter), 1, file);
+    fread(&res->biYPelsPerMeter, sizeof(res->biYPelsPerMeter), 1, file);
+    fread(&res->biClrUsed, sizeof(res->biClrUsed), 1, file);
+    fread(&res->biClrImportant, sizeof(res->biClrImportant), 1, file);
     return res;
 }
 
