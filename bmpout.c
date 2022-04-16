@@ -110,7 +110,7 @@ void print_histogram(const float arr[], const char* color_descriptor) {
 
 void read_histogram(const BMPfile* file) {
     if (!(file->info_header->biCompression == 0 && file->info_header->biBitCount == 24)) {
-        printf("A histogram calculation is not supported for biCompression != 0 or biBitCount != 24");
+        printf("A histogram is not supported for biCompression != 0 or biBitCount != 24\n");
         return;
     }
     float color_share_arr[16];
@@ -140,6 +140,10 @@ void convert_to_grayscale(const BMPfile* bmp) {
 }
 
 void option_grayscale(const BMPfile* bmp, const char* const path) {
+    if (!(bmp->info_header->biCompression == 0 && bmp->info_header->biBitCount == 24)) {
+        printf("Grayscale is not supported for biCompression != 0 or biBitCount != 24\n");
+        return;
+    }
     convert_to_grayscale(bmp);
     export_bitmap(bmp, path);
 }
