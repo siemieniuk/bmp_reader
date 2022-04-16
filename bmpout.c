@@ -49,11 +49,12 @@ void write_bitmap_info_header(FILE* file, const BMPfile* bmp) {
     fwrite(&header->biClrImportant, sizeof(header->biClrImportant), 1, file);
 }
 
-// TODO: Check why this function creates memory leak
-//! It has problem with memory leaks!
 void write_bitmap_pxarray(FILE* file, const BMPfile* bmp) {
+    const unsigned ROW_LENGTH = bmp->row_length;
     for (unsigned row=0; row < bmp->info_header->biHeight; ++row) {
-        fwrite(&bmp->pxarray[row], sizeof(unsigned char), bmp->row_length, file);
+        for (unsigned col=0; col<ROW_LENGTH; col++) {
+            fwrite(&bmp->pxarray[row][col], sizeof(unsigned char), 1, file);
+        }
     }
 }
 
@@ -121,19 +122,19 @@ void read_histogram(const BMPfile* file) {
     print_histogram(color_share_arr, "Red");
 }
 
-// TODO: Check if it converts properly
 void convert_to_grayscale(const BMPfile* bmp) {
+    const unsigned ROW_LENGTH = bmp->row_length;
     for (unsigned row=0; row < bmp->info_header->biHeight; ++row) {
-        for (unsigned col=0; col < bmp->row_length; col+=3) {
+        for (unsigned col=0; col < ROW_LENGTH-2; col+=3) {
             struct rgb obj = {
-                bmp->pxarray[row][col],
-                bmp->pxarray[row][col+1],
-                bmp->pxarray[row][col+2]
+                bmp->pxarray[row][col+2], // Red
+                bmp->pxarray[row][col+1], // Green
+                bmp->pxarray[row][col]    // Blue
             };
             unsigned char gray = calculate_gray(obj);
-            bmp->pxarray[row][col] = gray;
-            bmp->pxarray[row][col+1] = gray;
             bmp->pxarray[row][col+2] = gray;
+            bmp->pxarray[row][col+1] = gray;
+            bmp->pxarray[row][col] = gray;
         }
     }
 }
