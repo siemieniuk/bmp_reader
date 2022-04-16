@@ -24,15 +24,15 @@ BMPfile* read_bmp_file(const char* const path) {
     img->info_header = read_bitmap_info_header(file);
     img->row_length = compute_bmp_row_size(img);
     // creating 2D array
-    img->content = (unsigned char**)calloc(img->info_header->biHeight, sizeof(unsigned char*));
+    img->pxarray = (unsigned char**)calloc(img->info_header->biHeight, sizeof(unsigned char*));
     for (unsigned i=0; i<img->info_header->biHeight; i++) {
-        img->content[i] = (unsigned char*)calloc(img->row_length, sizeof(unsigned char));
+        img->pxarray[i] = (unsigned char*)calloc(img->row_length, sizeof(unsigned char));
     }
-    // Set the file position indicator in front of main content
+    // Set the file position indicator in front of the pixel array
     fseek(file, img->file_header->bfOffBits, SEEK_SET);
     // Reading each of a GRB pixel
     for (unsigned i=0; i<img->info_header->biHeight; i++) {
-        fread(img->content[i], img->row_length, 1, file);
+        fread(img->pxarray[i], img->row_length, 1, file);
     }
     fclose(file);
     return img;
@@ -66,9 +66,9 @@ BITMAPINFOHEADER* read_bitmap_info_header(FILE* file) {
 
 void free_bmp_file(BMPfile* img) {
     for (unsigned i=0; i<img->info_header->biHeight; i++) {
-        free(img->content[i]);
+        free(img->pxarray[i]);
     }
-    free(img->content);
+    free(img->pxarray);
     free(img->info_header);
     free(img->file_header);
     free(img);
