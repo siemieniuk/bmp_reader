@@ -17,5 +17,6 @@ unsigned char calculate_gray(const struct rgb obj);
 
 void read_histogram(const BMPfile* file);
 
+void option_grayscale(const BMPfile* file, const char* const path);
 
 #endif // BMPOUT_H_INCLUDED
