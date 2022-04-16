@@ -13,6 +13,7 @@ int main(int argc, char* argv[]) {
     BMPfile* bmp = read_bmp_file(argv[1]);
     print_bitmap_file_header(bmp->file_header);
     print_bitmap_info_header(bmp->info_header);
+    read_histogram(bmp);
     // check if output path was specified
     if (argc == 3) {
         // TODO: process with two paths
