@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "bmpall.h"
+#include "bmpin.h"
 
 unsigned compute_bmp_row_size(BMPfile*);
 void free_bmp_file(BMPfile*);
