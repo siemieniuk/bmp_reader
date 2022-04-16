@@ -1,11 +1,12 @@
 #include "steganography.h"
+#include <stdio.h>
 
 // TODO: write function
 bool should_decode_steganography() {
     printf("Decode steganography? [Y/n]\n");
     char* input;
     scanf("%s", input);
-    printf("%s");
+    printf("%s", input);
 }
 
 // TODO: write function
