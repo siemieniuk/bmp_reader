@@ -34,7 +34,7 @@ typedef struct BMPfile {
     BITMAPFILEHEADER* file_header;
     BITMAPINFOHEADER* info_header;
     unsigned row_length;
-    unsigned char** content;
+    unsigned char** pxarray;
 } BMPfile;
 
 struct rgb {

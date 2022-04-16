@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     read_histogram(bmp);
     // check if output path was specified
     if (argc == 3) {
-        // TODO: process with two paths
+        option_grayscale(bmp, argv[2]);
     }
     free_bmp_file(bmp);
     return 0;
