@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "bmp.h"
+#include "bmpall.h"
 
 void print_bitmap_file_header(struct tagBITMAPFILEHEADER* f) {
     printf("BITMAPFILEHEADER:\n");
