@@ -69,7 +69,7 @@ void write_bitmap_offset(FILE* file, const BMPfile* bmp) {
 void export_bitmap(const BMPfile* bmp, const char path[]) {
     FILE* file = fopen(path, "wb");
     if (!file) {
-        fprintf(stderr, "Cannot create file with a path: \"%s\".", path);
+        fprintf(stderr, "Cannot create file with a path: \"%s\".\n", path);
         fprintf(stderr, "Grayscale file was not created\n");
         return;
     }
