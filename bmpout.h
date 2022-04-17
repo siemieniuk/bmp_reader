@@ -3,7 +3,7 @@
 #include "bmp.h"
 
 /**
- * @brief Exports 
+ * @brief Exports bitmap to the specified path
  * 
  * @param bmp BMPfile object to export
  * @param path A path to the resulting BMP file
