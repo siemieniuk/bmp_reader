@@ -7,21 +7,24 @@ void option_invalid_program_usage();
 
 int main(int argc, char* argv[]) {
     BMPfile* bmp;
+    // Script accepts only argc from [2,4].
     if (2 <= argc <= 4) {
         bmp = read_bmp_file(argv[1]);
     }
-
     switch (argc) {
         case 2:
             print_bitmap_file_header(bmp->file_header);
             print_bitmap_info_header(bmp->info_header);
             read_histogram(bmp);
+            if (should_decode_steganography(bmp)) {
+                option_decrypt_steganography(bmp);
+            }
         break;
         case 3:
             option_grayscale(bmp, argv[2]);
             break;
         case 4:
-            option_steganography(bmp, argv[2], argv[3]);
+            option_encrypt_steganography(bmp, argv[2], argv[3]);
             break;
         default:
             option_invalid_program_usage();
