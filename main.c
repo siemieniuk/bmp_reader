@@ -8,7 +8,7 @@ void option_invalid_program_usage();
 int main(int argc, char* argv[]) {
     BMPfile* bmp;
     // Script accepts only argc from [2,4].
-    if (2 <= argc <= 4) {
+    if (2 <= argc && argc <= 4) {
         bmp = read_bmp_file(argv[1]);
     }
     switch (argc) {
