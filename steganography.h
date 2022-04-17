@@ -3,12 +3,10 @@
 #include "bmp.h"
 #include <stdbool.h>
 
-bool should_decode_steganography();
+bool should_decode_steganography(const BMPfile* const bmp);
 
-char* decrypt_steganography(const BMPfile* bmp);
+void option_decrypt_steganography(const BMPfile* bmp);
 
-void encrypt_steganography(const BMPfile* bmp, const char msg_to_encrypt[]);
-
-void option_steganography(const BMPfile* bmp, const char path[], const char msg_to_encrypt[]);
+void option_encrypt_steganography(const BMPfile* bmp, const char path[], const char msg_to_encrypt[]);
 
 #endif // STEGANOGRAPHY_H_INCLUDED
