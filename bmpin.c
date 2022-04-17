@@ -15,7 +15,7 @@ inline unsigned compute_bmp_row_size(BMPfile* file) {
 BMPfile* read_bmp_file(const char* const path) {
     FILE* file = fopen(path, "rb");
     if (!file) {
-        fprintf(stderr, "File %s not found!", path);
+        fprintf(stderr, "File %s not found\n", path);
         exit(1);
     }
     // creating IMG object
