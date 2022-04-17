@@ -17,14 +17,14 @@ int main(int argc, char* argv[]) {
             print_bitmap_info_header(bmp->info_header);
             read_histogram(bmp);
             if (should_decode_steganography(bmp)) {
-                option_decrypt_steganography(bmp);
+                option_decode_steganography(bmp);
             }
         break;
         case 3:
             option_grayscale(bmp, argv[2]);
             break;
         case 4:
-            option_encrypt_steganography(bmp, argv[2], argv[3]);
+            option_encode_steganography(bmp, argv[2], argv[3]);
             break;
         default:
             option_invalid_program_usage();
