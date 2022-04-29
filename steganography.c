@@ -11,7 +11,7 @@
  * @param msg_to_encode Message to encrypt
  * @return True if steganography can be applied without any issues, false otherwise
  */
-bool is_bmp_able_to_encode_steganography(const BMPfile* const bmp, const unsigned char msg_to_encode[]) {
+bool is_bmp_able_to_encode_steganography(const BMPfile* const bmp, const char msg_to_encode[]) {
     return ((strlen(msg_to_encode)+1)*8 > bmp->info_header->biSizeImage) ? false : true;
 }
 
@@ -68,7 +68,7 @@ unsigned char decode_oct(const unsigned char arr_to_decrypt[]) {
 void encode_oct(const BMPfile* bmp, unsigned char key, const unsigned start) {
     const unsigned ROW_LEN = bmp->row_length;
     for (unsigned i=0; i<8; ++i) {
-        if (key & 1 == 1) {
+        if ((key & 1) == 1) {
             bmp->pxarray[(start+i)/ROW_LEN][(start+i)%ROW_LEN] &= 0xFF;
         } else {
             bmp->pxarray[(start+i)/ROW_LEN][(start+i)%ROW_LEN] &= 0xFE;
