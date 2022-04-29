@@ -45,7 +45,7 @@ void encode_oct(const BMPfile* bmp, unsigned char key, const unsigned start) {
 void fetch_eight_chars(unsigned char chars_to_fetch[], const BMPfile* bmp, unsigned start) {
     if (start+7 > bmp->info_header->biSizeImage) {
         fprintf(stderr, "Image is too small to decode steganography\n");
-        return;
+        exit(1);
     }
     const unsigned ROW_LEN = bmp->row_length;
     for (unsigned i=0; i<8; ++i) {
@@ -75,7 +75,7 @@ bool should_decode_steganography(const BMPfile* const bmp) {
         printf("Steganography is not supported for 24-bit\n");
         return false;
     }
-    
+
     unsigned char buf[8] = { 0 };
     fetch_eight_chars(buf, bmp, 0);
     unsigned char DECRYPT_LEN = decode_oct(buf);
