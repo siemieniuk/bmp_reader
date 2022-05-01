@@ -80,7 +80,6 @@ void export_bitmap(const BMPfile* bmp, const char path[]) {
     fclose(file);
 }
 
-// TODO: fix reading colors; histogram is wrong for pure red image
 void get_histogram_row(const BMPfile* file, float arr[], unsigned start_point) {
     for (int i=0; i<16; ++i) {
         arr[i] = 0.0;
@@ -89,7 +88,8 @@ void get_histogram_row(const BMPfile* file, float arr[], unsigned start_point) {
     unsigned all_occurences_of_color = 0;
     // group colors into 16 different groups
     for (unsigned row=0; row < file->info_header->biHeight; ++row) {
-        for (unsigned col=start_point; col < file->row_length; ++col) {
+        const unsigned ROW_LENGTH = file->row_length-(file->row_length%3);
+        for (unsigned col=start_point; col < ROW_LENGTH; col += 3) {
             arr[(file->pxarray[row][col])/16]++;
             all_occurences_of_color++;
         }

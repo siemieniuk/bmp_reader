@@ -5,41 +5,6 @@
 #include "steganography.h"
 
 /**
- * @brief Checks if BMP image is large enough to encode steganography.
- * 
- * @param bmp BMP file in which steganography will be used
- * @param msg_to_encode Message to encrypt
- * @return True if steganography can be applied without any issues, false otherwise
- */
-bool is_bmp_able_to_encode_steganography(const BMPfile* const bmp, const unsigned char msg_to_encode[]) {
-    return ((strlen(msg_to_encode)+1)*8 > bmp->info_header->biSizeImage) ? false : true;
-}
-
-/**
- * @brief Checks if BMP image should be decoded (user wants and if it is possible)
- * 
- * @param bmp BMP file
- * @return True if image should be decoded, false otherwise
- */
-bool should_decode_steganography(const BMPfile* const bmp) {
-    if (!(bmp->info_header->biCompression == 0 && bmp->info_header->biBitCount == 24)) {
-        printf("Steganography is not supported for 24-bit\n");
-        return false;
-    }
-    char input;
-    // repeat until user input is valid
-    while (true) {
-        printf("Decode steganography? [Y/n] ");
-        scanf("%c", &input);
-        if (input == 'n' || input == 'N')
-            return false;
-        if (input == 'y' || input == 'Y')
-            return true;
-        printf("Invalid option\n");
-    }
-}
-
-/**
  * @brief Decodes steganography of eight consecutive bytes.
  * @details After each iteration, this function gets least significant bit from i-th element of arr, then puts its value to the decoded character on (7-i)th position.
  * 
@@ -68,7 +33,7 @@ unsigned char decode_oct(const unsigned char arr_to_decrypt[]) {
 void encode_oct(const BMPfile* bmp, unsigned char key, const unsigned start) {
     const unsigned ROW_LEN = bmp->row_length;
     for (unsigned i=0; i<8; ++i) {
-        if (key & 1 == 1) {
+        if ((key & 1) == 1) {
             bmp->pxarray[(start+i)/ROW_LEN][(start+i)%ROW_LEN] &= 0xFF;
         } else {
             bmp->pxarray[(start+i)/ROW_LEN][(start+i)%ROW_LEN] &= 0xFE;
@@ -80,11 +45,55 @@ void encode_oct(const BMPfile* bmp, unsigned char key, const unsigned start) {
 void fetch_eight_chars(unsigned char chars_to_fetch[], const BMPfile* bmp, unsigned start) {
     if (start+7 > bmp->info_header->biSizeImage) {
         fprintf(stderr, "Image is too small to decode steganography\n");
-        return;
+        exit(1);
     }
     const unsigned ROW_LEN = bmp->row_length;
     for (unsigned i=0; i<8; ++i) {
         chars_to_fetch[i] = bmp->pxarray[(start+i)/ROW_LEN][(start+i)%ROW_LEN];
+    }
+}
+
+/**
+ * @brief Checks if BMP image is large enough to encode steganography.
+ * 
+ * @param bmp BMP file in which steganography will be used
+ * @param msg_to_encode Message to encrypt
+ * @return True if steganography can be applied without any issues, false otherwise
+ */
+bool is_bmp_able_to_encode_steganography(const BMPfile* const bmp, const char msg_to_encode[]) {
+    return ((strlen(msg_to_encode)+1)*8 > bmp->info_header->biSizeImage) ? false : true;
+}
+
+/**
+ * @brief Checks if BMP image should be decoded (user wants and if it is possible)
+ * 
+ * @param bmp BMP file
+ * @return True if image should be decoded, false otherwise
+ */
+bool should_decode_steganography(const BMPfile* const bmp) {
+    if (!(bmp->info_header->biCompression == 0 && bmp->info_header->biBitCount == 24)) {
+        printf("Steganography is not supported for 24-bit\n");
+        return false;
+    }
+
+    unsigned char buf[8] = { 0 };
+    fetch_eight_chars(buf, bmp, 0);
+    unsigned char DECRYPT_LEN = decode_oct(buf);
+    if (DECRYPT_LEN*8 > bmp->info_header->biSizeImage) {
+        printf("Steganography not supported for this file.\n");
+        return false;
+    }
+
+    char input;
+    // repeat until user input is valid
+    while (true) {
+        printf("Decode steganography? [Y/n] ");
+        scanf("%c", &input);
+        if (input == 'n' || input == 'N')
+            return false;
+        if (input == 'y' || input == 'Y')
+            return true;
+        printf("Invalid option\n");
     }
 }
 
