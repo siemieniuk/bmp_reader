@@ -60,8 +60,8 @@ void write_bitmap_pxarray(FILE* file, const BMPfile* bmp) {
 
 void write_bitmap_offset(FILE* file, const BMPfile* bmp) {
     const char ZEROVAL = '\0';
-    const int offsize = bmp->file_header->bfOffBits - 14 - sizeof(BITMAPINFOHEADER);
-    for (int i=0; i<offsize; i++) {
+    const int OFFSIZE = bmp->file_header->bfOffBits - 14 - sizeof(BITMAPINFOHEADER);
+    for (int i=0; i<OFFSIZE; i++) {
         fwrite(&ZEROVAL, sizeof(char), 1, file);
     }
 }
@@ -73,10 +73,12 @@ void export_bitmap(const BMPfile* bmp, const char path[]) {
         fprintf(stderr, "Grayscale file was not created\n");
         return;
     }
+
     write_bitmap_file_header(file, bmp);
     write_bitmap_info_header(file, bmp);
     write_bitmap_offset(file, bmp);
     write_bitmap_pxarray(file, bmp);
+
     fclose(file);
 }
 
@@ -94,6 +96,7 @@ void get_histogram_row(const BMPfile* file, float arr[], unsigned start_point) {
             all_occurences_of_color++;
         }
     }
+
     // change to ratio
     for (unsigned i=0; i<16; ++i) {
         arr[i] /= all_occurences_of_color;
@@ -113,11 +116,15 @@ void read_histogram(const BMPfile* file) {
         printf("A histogram is not supported for biCompression != 0 or biBitCount != 24\n");
         return;
     }
+
     float color_share_arr[16];
+
     get_histogram_row(file, color_share_arr, 0);
     print_histogram(color_share_arr, "Blue");
+
     get_histogram_row(file, color_share_arr, 1);
     print_histogram(color_share_arr, "Green");
+
     get_histogram_row(file, color_share_arr, 2);
     print_histogram(color_share_arr, "Red");
 }
@@ -148,6 +155,7 @@ void option_grayscale(const BMPfile* bmp, const char* const path) {
     export_bitmap(bmp, path);
 }
 
+// based on luminocity method
 inline unsigned char calculate_gray(const struct rgb obj) {
-    return (obj.r+obj.g+obj.r)/3;
+    return (char)(0.299*obj.r+0.587*obj.g+0.114*obj.b);
 }
