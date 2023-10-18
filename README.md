@@ -1,20 +1,23 @@
 # bmp_reader
-This program reads parameters of BMP file, prints histogram, supports steganography and converts to the grayscale version.
+This program reads parameters of BMP file, prints histogram, converts to the grayscale version and has support for steganography.
 
 ## How to compile?
-You can use GCC in order to compile program. Type the command:
+You can use GCC or any other C compiler. In case of GCC type the command:
 
     gcc main.c bmpin.c bmpout.c steganography.c -o bmpreader
 
-## How to use the script?
-Show details, histogram and steganography of the file:
+## How to use this program?
+
+Once you compiled a program, you are able to use it in practice.
+
+Show details, histogram and steganography (if exists) of the file:
 
     ./bmpreader <file.bmp>
 
-Create grayscale of *in.bmp* and save to *out.bmp*:
+Create a grayscale version of *in.bmp* and save the result to *out.bmp*:
 
     ./bmpreader <in.bmp> <out.bmp>
 
-Create *out.bmp* file from *in.bmp* and embed steganography message into it:
+Create *out.bmp* file from *in.bmp* and embed a steganography message inside:
 
     ./bmpreader <in.bmp> <out.bmp> <message_to_include>
